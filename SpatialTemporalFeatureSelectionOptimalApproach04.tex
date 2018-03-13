@@ -63,6 +63,7 @@
 % (uncomment the ones you want to load)
 
 \usepackage{siunitx}
+\usepackage{nicefrac}
 \sisetup{
 group-four-digits = true,
 group-separator = {,}
@@ -497,7 +498,7 @@ IEEE, IEEEtran, journal, \LaTeX, paper.
 %
 % Here we have the typical use of a "T" for an initial drop letter
 % and "HIS" in caps to complete the first word.
-\IEEEPARstart{G}{iven} a physical data set one of the most important questions one can pose is:``Can we predict the future?'' This 
+\IEEEPARstart{G}{iven} a physical data set one of the most important questions one can pose is: ``Can we predict the future?'' This 
 question can be put forward irrespectively of the fact that we may already have some insight or even be certain on what the exact model 
 behind some or all the observed variables is. For example, for chaotic dynamical systems \cite{0813340853,2004icti.book.....M}, we may 
 even have the underlying dynamics but still find it hard to predict the future, given that chaotic systems have exponential sensitivity 
@@ -585,7 +586,7 @@ here). Other authors \cite{Xia2006APF} try to use Support Vector Machines (SVMs)
 embedding approaches to define the states vectors. In fact, Parlitz and Merkwirth \cite{Parlitz2000NonlinearPO} in the
 ESANN 2000 meeting proceedings paper mentioned that local reconstruction of states ``\ldots may also serve as
 a starting point for deriving local mathematical models in terms of polynomials,
-radial basis functions or neural networks.''. Here we attempt to show empirical evidence that this is not just
+radial basis functions or neural networks\ldots''. Here we attempt to show empirical evidence that this is not just
 a starting point, but the optimal neural network input architecture. 
 
 All of the references above on neural network forecasting of spatial-temporal data series either use a simple delay based 
@@ -632,13 +633,14 @@ $s^n_m$ and a number $J\in \mathbb{N}$ of temporal past neighbours relative to $
 For each $s^n_m$, we define the input (feature) vector ${\bf x} (s^n_m)$ with components given by
 $s^n_m$, its $2I$ spatial neighbours and its $J$ past temporal
 neighbours, and with $K$ and $L$ being the spatial and temporal lags:
-\begin{multline}
-{\bf x}(s^n_m)=\{s^n_{m-I K }, ...,s^n_m, ..., s^n_{m+I K},
-s^{n-L}_{m-I K},..., s^{n-L}_{m},..., s^{n-L}_{m+I K},
-...\\ \cap
-s^{n-J L}_{m-I K},..., s^{n-J L}_{m},..., s^{n-J L}_{m+I K} \}
+\begin{IEEEeqnarray}{lrC}
 \label{embedding}
-\end{multline}
+{\bf x}(s^n_m)&=&\{s^n_{m-I K }, ...,s^n_m, ..., s^n_{m+I K},\\
+&& {}s^{n-L}_{m-I K},..., s^{n-L}_{m},..., s^{n-L}_{m+I K},
+\ldots \nonumber\\ 
+&& {}\ldots,s^{n-J L}_{m-I K},..., s^{n-J L}_{m},..., s^{n-J L}_{m+I K} \}
+\nonumber
+\end{IEEEeqnarray}
 
 So, the input is a
 $(2 I+1)(J+1)$ vector ${\bf x}(s^n_m)$ and the target (output) to train the network is the value $s^{n+1}_{m}$.
@@ -666,7 +668,8 @@ $n$, we included a momentum $\alpha$ and a weight decay $\rho$.
 In addition, we use one hidden layer with $N_h$ nodes. A further hyperparameter is the choice of the activation function, we use either ReLu or a sigmoid function depending on the
  test case we are working with.
 We also normalize the data before passing it through the neural network, in most cases we scale it in linear fashion
-$x \to \alpha_{nor} + x/\beta_{nor}$, and in the case of real physical data as we will see later, we scale it in logarithmic fashion it by $x \to \alpha_{nor}+\frac{\ln(1+x)}{\beta_{nor}}$, where $x$ is the initial data,
+$x \to \alpha_{nor} + x/\beta_{nor}$, and in the case of real physical data as we will see later, 
+we scale it in logarithmic fashion it by $x \to \alpha_{nor}+\nicefrac{\ln(1+x)}{\beta_{nor}}$, where $x$ is the initial data,
 and $\alpha_{nor}$ and $\beta_{nor}$ are the arbitrary shift and scaling constants, respectively. For the weight (and bias)
 initialization we choose random numbers with a constant distribution between $[0,1]$ and shifted by $\alpha_{rng}$ and scaled
 by $\beta_{rng}$. The final hyperparameter is the number of steps taken on the stochastic gradient descent (equivalent to a mini-batch approach of $N_{\textnormal{batch}}=1$) which we denote by $N_{\textnormal{steps}}$.  All of these hyperparameters are calibrated and fixed
@@ -902,11 +905,12 @@ Results seems to suggest the same structure as depicted in our conjecture diagra
 % results in
 % C:\Users\eurico\SunspotAnalysis\SpatialTemporalFeatureSelectionOptimalApproach\KuramotoSivashinsky23_Lorenz.xlsm
 
-For the spatially extended ODEs model we used a well-known 40 couple ODE dynamical system proposed by Edward Lorenz in 1996 \cite{articleLorenz96}
+For the spatially extended ODEs model we used a well-known 40 coupled ODE dynamical system proposed by Edward Lorenz in 1996 
+\cite{articleLorenz96}:
 
-\begin{equation}{lCr}
+\begin{equation}
 \label{lorenz96equations}
-\frac{d\,x_j}{d\,t}=\left( x_{j+1} - x_{j-2} \right ) x_{j-1} - x_j + F, j=1, \ldots, N=40,
+\frac{dx_j}{dt}=\left( x_{j+1} - x_{j-2} \right ) x_{j-1} - x_j + F, \, j=1, \ldots, N=40,
 \end{equation}
 where $x_{-1}=x_{N-1}$, $x_0=x_N$ and $x_{N+1}=x_1$. We use the forcing $F=5$ to get some interesting behaviour in space and time. We used a time step $\Delta t=0.05$ and we have integrated this equation using Matlab (ADD REFERENCE).
 
@@ -1089,7 +1093,8 @@ there are many clear extensions to our research. First to include more complex a
 layers, to possible tackle systems which are hyperchaotic. Second, to attempt to extend the conjecture with empirical evidence in high 
 dimensions, e.g. 3+1 dimensional weather systems. Third, to extend the conjecture to more complex and fashionable
 neural networks models, such as recurrent neural networks, particularly echo state networks and long short-term memory networks.
- Fourth and last but not least, to prove the conjecture would show how dynamical systems theory can clarify the so call ``dark arts’’ in neural network architecture construction. (HOW? MARKOV CHAINS?).
+ Fourth and last but not least, to prove the conjecture would show how dynamical systems theory can clarify the so call
+ ``dark arts'' in neural network architecture construction. (HOW? MARKOV CHAINS?).
 
 % if have a single appendix:
 %\appendix[Proof of the Zonklar Equations]
