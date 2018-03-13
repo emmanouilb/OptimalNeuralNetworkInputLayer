@@ -1,0 +1,11 @@
+# $Author: predrag $ $Date: 2007-05-05 15:27:24 -0400 (Sat, 05 May 2007) $
+
+latex $1.tex
+bitex $1
+latex $1.tex
+latex $1.tex
+dvips -Ppdf $1.dvi -o $1.ps
+ps2pdf $1.ps $1.pdf
+echo ' '
+echo '       '$1'.pdf updated'
+echo ' '

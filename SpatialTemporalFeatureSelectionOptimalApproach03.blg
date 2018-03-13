@@ -1,0 +1,63 @@
+This is BibTeX, Version 0.99d (TeX Live 2017/Cygwin)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: SpatialTemporalFeatureSelectionOptimalApproach03.aux
+The style file: IEEEtran.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated field_info (elt_size=4) to 11762 items from 5000.
+Database file #1: IEEEabrv.bib
+Database file #2: eurico.bib
+-- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+Warning--empty booktitle in Powell:1987:RBF:48424.48433
+Warning--empty booktitle in Waibel:1990:PRU:108235.108263
+Warning--empty journal in articleRagulskis
+Warning--empty journal in articleLorenz96
+
+Done.
+You've used 147 entries,
+            4087 wiz_defined-function locations,
+            2301 strings with 47228 characters,
+and the built_in function-call counts, 113632 in all, are:
+= -- 9534
+> -- 2443
+< -- 1022
++ -- 1398
+- -- 406
+* -- 5407
+:= -- 17120
+add.period$ -- 306
+call.type$ -- 147
+change.case$ -- 156
+chr.to.int$ -- 2289
+cite$ -- 151
+duplicate$ -- 8236
+empty$ -- 8819
+format.name$ -- 507
+if$ -- 26693
+int.to.chr$ -- 0
+int.to.str$ -- 147
+missing$ -- 1299
+newline$ -- 488
+num.names$ -- 163
+pop$ -- 2729
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 2
+skip$ -- 8896
+stack$ -- 0
+substring$ -- 5655
+swap$ -- 7049
+text.length$ -- 259
+text.prefix$ -- 0
+top$ -- 5
+type$ -- 147
+warning$ -- 4
+while$ -- 504
+width$ -- 150
+write$ -- 1500
+(There were 4 warnings)

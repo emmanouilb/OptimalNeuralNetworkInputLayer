@@ -1,0 +1,54 @@
+% setup.tex
+% $Author: predrag $ $Date: 2007-02-22 17:39:35 -0500 (Thu, 22 Feb 2007) $
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{url}
+\usepackage{fancyhdr}
+
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[dvips]{graphicx}
+% \usepackage{mathpazo}
+\usepackage{srcltx}
+\usepackage{xcolor}
+% \usepackage{array}
+\usepackage[dvips]{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%% PAGE LAYOUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%              Predrag  22 feb 2000
+%% from defExam.tex         Predrag   1 may 2006
+
+%\headheight 0pt
+%\hfuzz 0.3cm
+%\evensidemargin .4cm    %left page left margni
+\oddsidemargin .4cm    %right page left margni
+\marginparwidth 110pt   % test this - 23 aug 97
+%\topmargin -.5cm
+\topmargin -.1cm        % trying to get it on US printer
+\headsep .5cm
+%\textheight 23.5cm     % A4 paper
+%\textwidth 14.9cm      % A4 paper
+\textheight 21.8cm      % trying to get it on US printer
+\textwidth 13.5cm
+\topskip .6cm
+\parskip 12pt plus1pt minus2pt
+%\parindent 0pt
+%\mathindent 1cm
+%\renewcommand{\baselinestretch}{1.1}
+\renewcommand{\arraystretch}{0.9}
+
+\normalsize
+
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]%
+        {\markright{{\bf\thesection}\ ~~#1}}
+\lhead{\fancyplain{}{\sl\rightmark}}
+\rhead[\fancyplain{}{\sl\rightmark}]{}
+\cfoot{}
+\lfoot{\sl printed \today}
+\rfoot{\rm\thepage}
+
+

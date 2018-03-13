@@ -1,0 +1,341 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Demonstration of PODES solution of the Kuramoto-Sivashinsky PDE</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-04-27"><meta name="DC.source" content="KS_solver.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>Demonstration of PODES solution of the Kuramoto-Sivashinsky PDE</h1><!--introduction--><p>This is a brief tutorial on how to use the software from the paper &#8220;Probabilistic Integration for Uncertainty Quantification in Differential Equation Models&#8221; by O.A. Chkrebtii, D.A. Campbell, M.A. Girolami, B. Calderhead</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#6">Set up grid, hyperparameters, and initial state:</a></li><li><a href="#7">Probabilistically solve resulting ODE initial value problem:</a></li><li><a href="#8">Plot one PODES realization</a></li><li><a href="#9">Plot B PODES realizations</a></li></ul></div><p>The Kuramoto-Sivashinsky (KS) PDE is a model of reaction-diffusion systems (Kuramoto and Tsuzuki,1976; Sivashinsky and Michelson, 1980), originally used to describe phenomena, such as laminar flame fronts, driven far from equilibrium by instabilities.  This model is also of mathematical interest because it exhibits temporal chaotic dynamics. Just as with the Lorenz system, we point out that numerical solutions do not provide a sensible approximation of this system's long-range behaviour.</p><p>The KS system is a one-dimensional, nonlinear PDE boundary value problem describing the time evolution of the intensity of a flame front, <img src="KS_solver_eq35435.png" alt="$u$">, by,</p><p><img src="KS_solver_eq25586.png" alt="$$\mbox{u}_t(x,t) = - \mbox{u}(x,t) \, \mbox{u}_x(x,t) - \mbox{u}_{xx}(x,t) - \mbox{u}_{xxxx}(x,t), \quad\quad (x,t)\in\mathcal{D}$$"></p><p><img src="KS_solver_eq66790.png" alt="$$u(x,a) = u_B(x), \quad\quad (x,t) \in \partial\mathcal{D}$$"></p><p>Following  (Kassam and Trefethen, 2005), we consider the spatio-temporal domain <img src="KS_solver_eq30511.png" alt="$\mathcal{D} = [ 0,32\pi ] \times [0,150]$">.</p><h2>Set up grid, hyperparameters, and initial state:<a name="6"></a></h2><pre class="codeinput"><span class="comment">% set random seed (or comment out to generate one automatically)</span>
+RandStream.setGlobalStream(RandStream(<span class="string">'mt19937ar'</span>,<span class="string">'seed'</span>,100))
+
+kernel      = <span class="string">'gaussian'</span>;
+a           = 0;        <span class="comment">% lower boundary of time domain</span>
+b           = 150;      <span class="comment">% upper boundary of time domain</span>
+tspan       = [a b];
+M           = 128;      <span class="comment">% size of spatial discretization grid</span>
+N           = 2000;     <span class="comment">% number of solver time-steps</span>
+dt          = range(tspan)/(N-1);   <span class="comment">% size of one time-step</span>
+B           = 15;       <span class="comment">% number of realizations produced</span>
+alpha       = 10;       <span class="comment">% prior precision parameter</span>
+lambda      = 2*dt;     <span class="comment">% length-scale</span>
+
+
+<span class="comment">% FFT with integrating factor v = exp(-ik^3t)*u-hat.</span>
+<span class="comment">% See Kassam and Trefethen (2005) details</span>
+
+el          = 16;
+x           = 32*pi*(1:M)/M;
+t           = linspace(tspan(1),tspan(2),N);
+D1          = 1i*(1/el)*[0:M/2-1 0 -M/2+1:-1];
+D2          = D1.^2;
+D2((M/2)+1) = -(M*pi/(32*pi))^2;
+D4          = D2.^2;
+L           = -D2-D4;
+g           = -D1/2;
+u           = repmat(vertcat(cos(x/el).*(1+sin(x/el)),zeros(N-1,M)),[1,1,B]);
+uhat        = repmat(vertcat(fft(cos(x/el).*(1+sin(x/el))),zeros(N-1,M)),[1,1,B]);
+Duhat       = repmat(vertcat(g.*fft((cos(x/el).*(1+sin(x/el))).^2),zeros(N-1,M)),[1,1,B]);
+</pre><h2>Probabilistically solve resulting ODE initial value problem:<a name="7"></a></h2><pre class="codeinput">E                   = exp(repmat(L,N-1,1).*repmat(dt*(1:N-1)',1,M));
+Binv                = zeros(N,N);
+
+<span class="keyword">if</span> strcmp(kernel,<span class="string">'uniform'</span>)
+     Ntrim          = ceil(2*lambda*N/range(tspan))+1;
+<span class="keyword">else</span>
+    Ntrim           = N;
+<span class="keyword">end</span>
+
+tic
+
+disp(<span class="string">'This will take ~5 minutes ... '</span>)
+
+<span class="keyword">for</span> k = 1:N-1
+
+    tn = k*dt;
+    <span class="keyword">if</span> k == 1
+        Binv(1,1)              = alpha/RR1d(t(1),t(1),lambda,a,b);
+    <span class="keyword">else</span>
+        <span class="comment">% components of the inverse of block matrix (Lambda + RR1d)^{-1}</span>
+        <span class="keyword">if</span> k &lt; Ntrim + 1
+            b                       = RR1d(t(1:k-1),t(k),lambda,a,b)/alpha;
+            D                       = Binv(1:k-1,1:k-1);
+            Db                      = D*b;
+            btD                     = Db';
+            c                       = ss_kp1 + RR1d(t(k),t(k),lambda,a,b)/alpha - b'*Db;
+        <span class="keyword">else</span>
+            bt                      = RR1d(t(Ntrim),t(1:Ntrim-1),lambda,a,b)/alpha;
+            D                       = Binv(k-Ntrim+1:k-1,1:k-1);
+            btD                     = bt*D;
+            Db                      = btD';
+            c                       = ss_kp1 + RR1d(t(k),t(k),lambda,a,b)/alpha - btD(1,k-Ntrim+1:k-1)*bt';
+        <span class="keyword">end</span>
+
+        <span class="comment">% build up the inverse of block matrix (Lambda + RR1d)^{-1}</span>
+        Binv(1:k-1,1:k-1)         = Binv(1:k-1,1:k-1) + Db*btD/c;
+        Binv(1:k-1,k)             = -Db/c;
+        Binv(k,1:k-1)             = -btD/c;
+        Binv(k,k)                 = 1/c;
+
+    <span class="keyword">end</span>
+
+    qrb                         = QR1d(t(k+1),t(1:k),lambda,a,b)*Binv(1:k,1:k)/alpha;
+    ss_kp1                      = RR1d(t(k+1),t(k+1),lambda,a,b)/alpha - RR1d(t(k+1),t(1:k),lambda,a,b)*Binv(1:k,1:k)*RR1d(t(1:k),t(k+1),lambda,a,b)/(alpha^2);
+    sapv                        = QQ1d(t(k+1),t(k+1),lambda,a,b)/alpha - qrb*RQ1d(t(1:k),t(k+1),lambda,a,b)/alpha;
+
+    <span class="keyword">for</span> bb = 1:B
+        sapm                        = uhat(1,:,bb).*E(k,:) + qrb*(Duhat(1:k,:,bb).*E(fliplr(1:k),:));
+        uhat(k+1,:,bb)              = mvnrnd(sapm',sapv)';
+        u(k+1,:,bb)                 = real(ifft(uhat(k+1,:,bb)));
+        Duhat(k+1,:,bb)             = g.*fft(u(k+1,:,bb).^2);
+    <span class="keyword">end</span>
+
+    <span class="keyword">if</span> isnan(sum(Duhat(k+1,:)))
+        display([<span class="string">'error at iteration '</span>,num2str(k)])
+        <span class="keyword">return</span>
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+toc
+</pre><pre class="codeoutput">This will take ~5 minutes ... 
+Elapsed time is 338.715787 seconds.
+</pre><h2>Plot one PODES realization<a name="8"></a></h2><pre class="codeinput">bb = 1;
+figure()
+subplot(1,2,1)
+surf(t,x,u(:,:,bb)'), shading <span class="string">interp</span>, lighting <span class="string">phong</span>, axis <span class="string">tight</span>
+material([0.30 0.60 0.60 40.00 1.00]);
+ylabel(<span class="string">'space'</span>)
+xlabel(<span class="string">'time'</span>)
+subplot(1,2,2)
+surf(t,x,u(:,:,bb)'), shading <span class="string">interp</span>, lighting <span class="string">phong</span>, axis <span class="string">tight</span>
+view([-90 90]), colormap(autumn); set(gca,<span class="string">'zlim'</span>,[-5 50])
+light(<span class="string">'color'</span>,[1 1 0],<span class="string">'position'</span>,[-1,2,2])
+material([0.30 0.60 0.60 40.00 1.00]);
+ylabel(<span class="string">'space'</span>)
+xlabel(<span class="string">'time'</span>)
+</pre><img vspace="5" hspace="5" src="KS_solver_01.png" alt=""> <h2>Plot B PODES realizations<a name="9"></a></h2><pre class="codeinput">figure()
+<span class="keyword">for</span> bb = 1:B
+    subaxis(3,5,bb)
+    surf(t,x,u(:,:,bb)'), shading <span class="string">interp</span>, lighting <span class="string">phong</span>, axis <span class="string">tight</span>
+    view([-90 90]), colormap(hot); set(gca,<span class="string">'zlim'</span>,[-5 50])
+    light(<span class="string">'color'</span>,[1 1 0],<span class="string">'position'</span>,[-1,2,2])
+    material([0.30 0.60 0.60 40.00 1.00]);
+    axis <span class="string">square</span>;
+    set(gca,<span class="string">'xtick'</span>,[])
+    set(gca,<span class="string">'ytick'</span>,[])
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="KS_solver_02.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Demonstration of PODES solution of the Kuramoto-Sivashinsky PDE
+% This is a brief tutorial on how to use the software from the paper
+% “Probabilistic Integration for Uncertainty Quantification in Differential
+% Equation Models” by O.A. Chkrebtii, D.A. Campbell, M.A. Girolami, B. Calderhead
+
+%%
+% The Kuramoto-Sivashinsky (KS) PDE is a model of reaction-diffusion
+% systems (Kuramoto and Tsuzuki,1976; Sivashinsky and Michelson, 1980),
+% originally used to describe phenomena, such as laminar flame fronts,
+% driven far from equilibrium by instabilities.  This model is also of
+% mathematical interest because it exhibits temporal chaotic dynamics.
+% Just as with the Lorenz system, we point out that numerical solutions do
+% not provide a sensible approximation of this system's long-range
+% behaviour.
+%%
+% The KS system is a one-dimensional, nonlinear PDE boundary value problem
+% describing the time evolution of the intensity of a flame front, $u$, by,
+%%
+% $$\mbox{u}_t(x,t) = - \mbox{u}(x,t) \, \mbox{u}_x(x,t) - \mbox{u}_{xx}(x,t) - \mbox{u}_{xxxx}(x,t), \quad\quad (x,t)\in\mathcal{D}$$
+%
+% $$u(x,a) = u_B(x), \quad\quad (x,t) \in \partial\mathcal{D}$$
+%% 
+% Following  (Kassam and Trefethen, 2005), we consider the spatio-temporal
+% domain $\mathcal{D} = [ 0,32\pi ] \times [0,150]$.
+%%
+
+
+%% Set up grid, hyperparameters, and initial state:
+
+% set random seed (or comment out to generate one automatically)
+RandStream.setGlobalStream(RandStream('mt19937ar','seed',100))
+
+kernel      = 'gaussian';
+a           = 0;        % lower boundary of time domain
+b           = 150;      % upper boundary of time domain
+tspan       = [a b];
+M           = 128;      % size of spatial discretization grid
+N           = 2000;     % number of solver time-steps
+dt          = range(tspan)/(N-1);   % size of one time-step  
+B           = 15;       % number of realizations produced
+alpha       = 10;       % prior precision parameter
+lambda      = 2*dt;     % length-scale
+
+
+% FFT with integrating factor v = exp(-ik^3t)*u-hat.
+% See Kassam and Trefethen (2005) details
+
+el          = 16;
+x           = 32*pi*(1:M)/M; 
+t           = linspace(tspan(1),tspan(2),N);
+D1          = 1i*(1/el)*[0:M/2-1 0 -M/2+1:-1];
+D2          = D1.^2; 
+D2((M/2)+1) = -(M*pi/(32*pi))^2;
+D4          = D2.^2; 
+L           = -D2-D4;
+g           = -D1/2;
+u           = repmat(vertcat(cos(x/el).*(1+sin(x/el)),zeros(N-1,M)),[1,1,B]);
+uhat        = repmat(vertcat(fft(cos(x/el).*(1+sin(x/el))),zeros(N-1,M)),[1,1,B]);
+Duhat       = repmat(vertcat(g.*fft((cos(x/el).*(1+sin(x/el))).^2),zeros(N-1,M)),[1,1,B]);
+
+
+%% Probabilistically solve resulting ODE initial value problem:
+
+E                   = exp(repmat(L,N-1,1).*repmat(dt*(1:N-1)',1,M));
+Binv                = zeros(N,N);
+
+if strcmp(kernel,'uniform')
+     Ntrim          = ceil(2*lambda*N/range(tspan))+1;
+else
+    Ntrim           = N;
+end
+
+tic
+
+disp('This will take ~5 minutes ... ')
+
+for k = 1:N-1
+    
+    tn = k*dt;
+    if k == 1
+        Binv(1,1)              = alpha/RR1d(t(1),t(1),lambda,a,b);
+    else
+        % components of the inverse of block matrix (Lambda + RR1d)^{-1}
+        if k < Ntrim + 1
+            b                       = RR1d(t(1:k-1),t(k),lambda,a,b)/alpha;
+            D                       = Binv(1:k-1,1:k-1);
+            Db                      = D*b;
+            btD                     = Db';
+            c                       = ss_kp1 + RR1d(t(k),t(k),lambda,a,b)/alpha - b'*Db;
+        else
+            bt                      = RR1d(t(Ntrim),t(1:Ntrim-1),lambda,a,b)/alpha;
+            D                       = Binv(k-Ntrim+1:k-1,1:k-1);
+            btD                     = bt*D;
+            Db                      = btD';
+            c                       = ss_kp1 + RR1d(t(k),t(k),lambda,a,b)/alpha - btD(1,k-Ntrim+1:k-1)*bt';
+        end
+        
+        % build up the inverse of block matrix (Lambda + RR1d)^{-1}
+        Binv(1:k-1,1:k-1)         = Binv(1:k-1,1:k-1) + Db*btD/c;
+        Binv(1:k-1,k)             = -Db/c;
+        Binv(k,1:k-1)             = -btD/c;
+        Binv(k,k)                 = 1/c;
+        
+    end
+    
+    qrb                         = QR1d(t(k+1),t(1:k),lambda,a,b)*Binv(1:k,1:k)/alpha;
+    ss_kp1                      = RR1d(t(k+1),t(k+1),lambda,a,b)/alpha - RR1d(t(k+1),t(1:k),lambda,a,b)*Binv(1:k,1:k)*RR1d(t(1:k),t(k+1),lambda,a,b)/(alpha^2);
+    sapv                        = QQ1d(t(k+1),t(k+1),lambda,a,b)/alpha - qrb*RQ1d(t(1:k),t(k+1),lambda,a,b)/alpha;
+     
+    for bb = 1:B
+        sapm                        = uhat(1,:,bb).*E(k,:) + qrb*(Duhat(1:k,:,bb).*E(fliplr(1:k),:));
+        uhat(k+1,:,bb)              = mvnrnd(sapm',sapv)';
+        u(k+1,:,bb)                 = real(ifft(uhat(k+1,:,bb)));
+        Duhat(k+1,:,bb)             = g.*fft(u(k+1,:,bb).^2);
+    end
+    
+    if isnan(sum(Duhat(k+1,:)))
+        display(['error at iteration ',num2str(k)])
+        return
+    end
+    
+end
+
+toc
+
+%% Plot one PODES realization
+bb = 1;
+figure()
+subplot(1,2,1)
+surf(t,x,u(:,:,bb)'), shading interp, lighting phong, axis tight
+material([0.30 0.60 0.60 40.00 1.00]);
+ylabel('space')
+xlabel('time')
+subplot(1,2,2)
+surf(t,x,u(:,:,bb)'), shading interp, lighting phong, axis tight
+view([-90 90]), colormap(autumn); set(gca,'zlim',[-5 50])
+light('color',[1 1 0],'position',[-1,2,2])
+material([0.30 0.60 0.60 40.00 1.00]);
+ylabel('space')
+xlabel('time')
+
+
+%% Plot B PODES realizations
+figure()
+for bb = 1:B
+    subaxis(3,5,bb)
+    surf(t,x,u(:,:,bb)'), shading interp, lighting phong, axis tight
+    view([-90 90]), colormap(hot); set(gca,'zlim',[-5 50])
+    light('color',[1 1 0],'position',[-1,2,2])
+    material([0.30 0.60 0.60 40.00 1.00]);
+    axis square;
+    set(gca,'xtick',[])
+    set(gca,'ytick',[])
+end
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,43 @@
+                  Chapter 5
+
+       Spline Collocation Analysis of
+       Partial Differential Equations
+
+The R routines in Chapter 5 are listed below
+according to the discussion of the listings
+in the chapter text.  The routines have an 
+extension .R and should execute when entered 
+into a R workspace.
+
+Listing 5.1
+pde_1a_main.R
+
+Listing 5.2
+pde_1a.R
+
+Listing 5.3
+ua.R
+
+Listing 5.4
+inital_1.R
+
+Listing 5.5
+uxxx7c.R
+
+Listing 5.6
+simp.R
+
+dss004.R
+This routine is not listed in Chapter 5, but
+is used in the calculation of the numerical 
+solution. 
+
+The main program has a setwd (set working
+directory) statement that requires editing for
+the local computer to specify the directory
+(folder) with the R routines.  The path is
+based on / and not the usual \, for example,
+setwd("f:/collocation/chap5")
+
+Please report any problems in executing these
+R routines to the author at wes1@lehigh.edu.
