@@ -627,8 +627,11 @@ The neural network architecture we choose to demonstrate our proposal is a form 
 sometimes called the time-delayed neural network \cite{Waibel:1990:PRU:108235.108263}, trained using the so-called back-propagation
 algorithm \cite{10.1007/BFb0006203, 1986Natur.323..533R, 58337, Lecun98gradient-basedlearning}. 
 We focus on spatial-temporal series, so we have extended the usual time-delayed neural network
-to be a time and space delayed network. The overall feature representation of the network is depicted in detail in Fig.\ 
-\ref{architecture}.
+to be a time and space delayed network. The overall feature representation of the network is depicted in detail in 
+Fig.\ \ref{architecture}. Notice we chose to used feedforward neural networks rather than more complex neural networks such
+as recurrent neural networks\cite{COGS:COGS203}, since
+feedforward ones are simpler to design; are capable of being used for forecasting of even complex chaotic signals; are guaranteed
+to converge, at least, to a local minima; and are easier to interpret.
 
 % to edit do the following 3 commands
 % inkscape architecture.svg (then print to architecture.pdf)
@@ -1193,7 +1196,8 @@ feedforward neural networks with one hidden layer for the purpose of prediction 
 there are many clear extensions to our research. First to use deeper networks with more hidden 
 layers to possible tackle systems which are hyperchaotic (i.e. with multiple positive Lyapunov exponents). Second, to attempt to extend the proposal with empirical evidence in high 
 dimensions, e.g. 3+1-dimensional weather systems. Third, to extend the proposal to more complex and fashionable
-neural networks models, such as recurrent neural networks, particularly echo state networks and long short-term memory networks.
+neural networks models, such as recurrent neural networks\cite{COGS:COGS203}, particularly echo state networks \cite{2015arXiv151007146M,2017arXiv170805094M} 
+and long short-term memory networks \cite{Hochreiter:1997:LSM:1246443.1246450}.
  Fourth and last but not least, to demonstrate the proposal rigorously would show how dynamical systems theory can clarify the so call
  ``dark arts'' in neural network feature construction. These objectives are however, outside the scope
  of this research article and will be pursued later.
