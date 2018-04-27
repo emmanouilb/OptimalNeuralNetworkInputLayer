@@ -204,10 +204,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.2088495"
-     inkscape:cx="390.60096"
-     inkscape:cy="654.16968"
+     inkscape:cx="452.49753"
+     inkscape:cy="651.27437"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1000"
@@ -228,7 +228,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -434,16 +434,16 @@
        ry="3.0777528" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.93297243px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18331078"
-       x="192.52394"
-       y="77.723099"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.31415701px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26963481"
+       x="192.42152"
+       y="79.657593"
        id="text7030"
-       transform="scale(0.98281786,1.0174825)"><tspan
+       transform="scale(0.98281788,1.0174825)"><tspan
          sodipodi:role="line"
          id="tspan7070"
-         x="192.52394"
-         y="77.723099"
-         style="stroke-width:0.18331078">I*,J*,K*,L*</tspan></text>
+         x="192.42152"
+         y="79.657593"
+         style="stroke-width:0.26963481">I*,J*,K*,L*</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
