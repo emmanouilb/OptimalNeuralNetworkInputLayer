@@ -162,7 +162,8 @@ group-separator = {,}
 % *** MATH PACKAGES ***
 %
 \usepackage{amsmath}
-\usepackage{newtxtext,newtxmath}
+%\usepackage{newtxtext,newtxmath}
+\usepackage{amssymb}
 % A popular package from the American Mathematical Society that provides
 % many useful and powerful commands for dealing with mathematics.
 %
@@ -518,7 +519,11 @@ refer the reader to
 Parlitz2000NonlinearPO,2000PhRvL..84.1890P,Xia2006APF,ENV:ENV2266,covas2016,ENV:ENV2456} and 
 references therein. Even rarer are attempts to forecast spatial-temporal chaos using neural networks and deep learning methodologies 
 \cite{covaspeixinhojoao,2017arXiv170805094M,2017arXiv171100636M,2017arXiv171110566R,2017arXiv171110561R,2017arXiv171009668L, 
-2018JCoPh.357..125R,2018arXiv180106637R}, although this field of research is clearly growing at the moment. Nonetheless, this area of 
+2017arXiv171205293C, ghaderi2017deepforecast,2017Chaos..27d1102L,
+2018JCoPh.357..125R,2018arXiv180106637R}, although this field of research is clearly growing at the moment\footnote{
+There is also a new emerging field of research on solving PDEs (therefore implicitly predicting a spatial-temporal
+evolution) using deep learning -- see \cite{2017arXiv170905963B,2017arXiv170807469S,2017arXiv170604702E} and references therein.}.
+ Nonetheless, this area of 
 research is of importance, as most physical systems are spatially extended, e.g. the atmospheric system driving the weather 
 \cite{9780521857291}; the solar dynamo driving the Sun's sunspots \cite{9780198512905}; and the influence of sunspots on the Earth's 
 magnetic field via the solar wind, coronal mass ejections and solar flares -- the so-called space weather 
@@ -674,7 +679,9 @@ and $\alpha_{nor}$ and $\beta_{nor}$ are the arbitrary shift and scaling constan
 initialization we choose random numbers with a constant distribution between $[0,1]$ and shifted by $\alpha_{rng}$ and scaled
 by $\beta_{rng}$. The final hyperparameter is the number of steps taken on the stochastic gradient descent (equivalent to a mini-batch approach of $N_{\textnormal{batch}}=1$) which we denote by $N_{\textnormal{steps}}$.  All of these hyperparameters are calibrated and fixed
 before we do any simulations with respect to the parameters $I$, $J$, $K$, $L$, which are auto-calibrated by the below mentioned
-methods derived from dynamical systems theory. In this sense these are not hyperparameters of the neural network.
+methods derived from dynamical systems theory. In this sense these are not hyperparameters of the neural network. We use the standard
+loss function $\mathcal{L}=\left( s^{n+1}_{m} - \hat{s}^{n+1}_{m}\right)^2$ for a prediction centered around $s^{n}_{m}$ using as input
+the features vector ${\bf x}(s^n_m)$ of total dimension  $(2 I+1)(J+1)$.
 
 
 We then compare the goodness of fit by first visual inspection and second by numerically calculating the so-called
@@ -1094,7 +1101,8 @@ layers, to possible tackle systems which are hyperchaotic. Second, to attempt to
 dimensions, e.g. 3+1 dimensional weather systems. Third, to extend the conjecture to more complex and fashionable
 neural networks models, such as recurrent neural networks, particularly echo state networks and long short-term memory networks.
  Fourth and last but not least, to prove the conjecture would show how dynamical systems theory can clarify the so call
- ``dark arts'' in neural network architecture construction. (HOW? MARKOV CHAINS?).
+ ``dark arts'' in neural network architecture construction. (HOW? MARKOV CHAINS?). These objectives are however, outside the scope
+ of this research paper and will be pursued later.
 
 % if have a single appendix:
 %\appendix[Proof of the Zonklar Equations]
@@ -1219,7 +1227,8 @@ Internationalization (project: POCI-01-0145-FEDER-006922).
 % argument is your BibTeX string definitions and bibliography database(s)
 %\bibliography{IEEEabrv,../bib/paper}
 \bibliographystyle{IEEEtran}
-\bibliography{IEEEabrv,eurico} % your references Yourfile.bib
+%\bibliography{IEEEabrv,eurico} % your references Yourfile.bib
+\bibliography{eurico} % your references Yourfile.bib
 %
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references

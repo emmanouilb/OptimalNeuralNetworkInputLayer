@@ -460,7 +460,7 @@ network for the propose of forecasting spatial-temporal signals. The approach is
 the non-linear embedding theorems. We demonstrate it for a variety of spatial-temporal signals, with one spatial and one temporal 
 dimensions, and show that the optimal input layer representation consists of a grid, with spatial/temporal lags determined by 
 the minimum of the mutual information of the spatial/temporal signals and the number of points taken in space/time decided by the 
-embedding dimension of the signal. We present evidence of this conjecture by running a Monte Carlo simulation of several combinations of 
+embedding dimension of the signal. We present evidence of this proposal by running a Monte Carlo simulation of several combinations of 
 input layer feature designs and show that the one predicted by the non-linear embedding theorems seems to be optimal or close of 
 optimal. In total we show evidence in four unrelated systems: a series of coupled H\'{e}non maps; a series of couple Ordinary 
 Differential Equations (Lorenz-96) phenomenologically modelling atmospheric dynamics; the Kuramoto-Sivashinsky equation, a partial
@@ -579,14 +579,7 @@ to select uncorrelated
 } -- see 
 \cite{Fraser86, abarbanel1997analysis, opac-b1092652} -- and to choose the number of points to include using  the method of {\em false 
 nearest neighbours} detection suggested by \cite{1992PhRvA..45.3403K} and reported in detail in \cite{1992PhRvA..45.7058M, 
-1993RvMP...65.1331A, 1996PhT....49k..86A, abarbanel1997analysis}. Using this theoretical framework, we conjecture that this non-linear 
-embedding method can be used to indicate what the best way to construct the feature representation for 
-the input layer of a neural network used for forecasting both in space and time.
-In order to support this conjecture, we, in this article, show empirical evidence for an optimal feature selection 
- for four particular cases of a two-dimensional
-spatial-temporal data series $s^n_m$, where by two-dimensional we mean a scalar field that can be
-defined by a $N \times M$ matrix with components $s^n_m \in \mathbb{R}$.
-
+1993RvMP...65.1331A, 1996PhT....49k..86A, abarbanel1997analysis}. 
 Some authors discuss the use of either the mutual information and/or embedding dimension as a constraint on feature representation
 \cite{annunziato, Gkana201579, Zachilas2015, Sun2010109, HUANG20108590, 298224, Frank2001, 1998GeoRL..25..457K, 
 BUHAMRA2003805, chandra2012cooperative, DBLP:journals/corr/MaslennikovaB14, sauter2010spatio, JiangS11, inputlayer, 1997IJMPC...8.1345K, 
@@ -611,20 +604,26 @@ a starting point, but the optimal neural network input feature selection. We als
 embedding theorems and the related mutual information and the false nearest neighbours methods seem not to justify its use, i.e., 
 the approach is explained, even suggested to be optimal but neither proven theoretically or empirically. Here we attempt 
 to provide an empirical evidence for this optimality. 
+
+Using this theoretical framework, we propose that this non-linear 
+embedding method, using the training data alone without reference to the forecasting model, 
+can be used to indicate what the best way to construct the feature representation for 
+the input layer of a neural network used for forecasting both in space and time.
+In order to support this proposal, we, in this article, show empirical evidence for an optimal feature selection 
+ for four particular cases of a two-dimensional
+spatial-temporal data series $s^n_m$, where by two-dimensional we mean a scalar field that can be
+defined by a $N \times M$ matrix with components $s^n_m \in \mathbb{R}$. Furthermore, notice the primary goal is not about demonstrating 
+the ability to forecast, which has already been done by several authors in the literature above, but rather that there is no need to calibrate
+the neural network feature selection specification by the ``dark art'' of trial and error.
  
 The article is divided as follows, in section \ref{modelsection} we explain our forecasting model, in section \ref{conjecturesection} 
-we propose our conjecture, in section \ref{resultssection} we show our results supporting this conjecture and finally in section
+we describe our proposal, in section \ref{resultssection} we show our results supporting this proposal and finally in section
 \ref{conclusionsection} we make our concluding remarks.
-\\
-
-\hfill Eurico Covas and Emmanouil Benetos
-
-\hfill \today
 
 \section{The model}
 \label{modelsection}
 
-The neural network architecture we choose to demonstrate our possible conjecture is a form of the basic feedforward neural network,
+The neural network architecture we choose to demonstrate our proposal is a form of the basic feedforward neural network,
 sometimes called the time-delayed neural network \cite{Waibel:1990:PRU:108235.108263}, trained using the so-called back-propagation
 algorithm \cite{10.1007/BFb0006203, 1986Natur.323..533R, 58337, Lecun98gradient-basedlearning}. 
 We focus on spatial-temporal series, so we have extended the usual time-delayed neural network
@@ -635,7 +634,7 @@ to be a time and space delayed network. The overall feature representation of th
 % inkscape architecture.svg (then print to architecture.pdf)
 % pdf270 --suffix 'turned' --batch architecture.pdf
 % pdfcrop architecture-turned.pdf
-\begin{figure}[!htb]
+\begin{figure*}[!htb]
 \resizebox{\hsize}{!}{\includegraphics{architecture-turned-crop.pdf}}
 \caption{Neural network architecture for forecasting spatial-temporal signals. 
 The neural network is made of an input layer, one or more hidden layer(s) and one output layer.
@@ -649,7 +648,7 @@ spatial and temporal delays, calculated from the actual physical spatial-tempora
 are passed via the neural network, the weights hopefully converge to an optimal training value. One can then forecast using the last
 time slices of the training set, and compare against the test set, the real future data set.}
 \label{architecture}
-\end{figure}
+\end{figure*}
 
 Under this input representation, we use the ideas proposed in \cite{Parlitz2000NonlinearPO, 2000PhRvL..84.1890P} to construct a grid of input values
 which are then fed to the neural network to produce a single output, the future state. Formally,
@@ -701,14 +700,14 @@ the features vector ${\bf x}(s^n_m)$ of total dimension  $(2 I+1)(J+1)$.
 
 
 
-\section{Conjecture}
+\section{Proposal}
 \label{conjecturesection}
 
 \begin{figure}[!htb]
 \resizebox{\hsize}{!}{\includegraphics{conjecture-crop.pdf}}
-\caption{Our main conjecture. For a infinite noiseless training set, the SSIM approaches $\textnormal{SSIM} \to 1$. For real data sets,
+\caption{Our main proposal. For a infinite noiseless training set, the SSIM approaches $\textnormal{SSIM} \to 1$. For real data sets,
 there is a dispersion of the SSIM versus some reasonable metric constructed to
- represent the distance between any feature selection (e.g.\ $d_e\sqrt{(I-I^*)^2+(J-J^*)^2+(K-K^*)^2+(L-L^*)^2}$).
+ represent the distance between any feature selection (e.g.\ $d_e = \sqrt{(I-I^*)^2+(J-J^*)^2+(K-K^*)^2+(L-L^*)^2}$).
 }
 \label{conjecture}
 \end{figure}
@@ -739,11 +738,11 @@ eliminated by virtue of projecting the full orbit in a increasing higher dimensi
 $J^*$, the optimal number of time slices to take,
 and $I^*$, the optimal number of spatial slices to take in our ${\bf x}(s^n_m)$ optimal reconstruction.
 
-In this article, we conjecture that as any set of input representation 
+In this article, we propose that as any set of input representation 
 ``approaches'' the optimal one, then $\textnormal{SSIM} \to 1$. In the case of finite training sets and/or noisy training sets  
 $\textnormal{SSIM} \to x<1$, where $x$ is the best forecast possible given the data set. Visually, we believe that the SSIM versus some reasonable 
 metric constructed to represent the distance between any input representation and the optimal input representation will show a skewed bell shape 
-as depicted in Fig.\ \ref{conjecture}. In this conjecture, we use the most obvious candidate to represent the distance between any input 
+as depicted in Fig.\ \ref{conjecture}. In this proposal, we use the most obvious candidate to represent the distance between any input 
 representation and the optimal   input representation, the Euclidian distance given by   
 $d_e=\sqrt{(I-I^*)^2+(J-J^*)^2+(K-K^*)^2+(L-L^*)^2}$, where $I$,$J$,$K$,$L$ are the parameters for each representation
 and $I^*$,$J^*$,$K^*$,$L^*$ are the ones derived from the dynamical systems theory. We also verified that other reasonable metrics,   
@@ -764,7 +763,7 @@ not change the results qualitatively.
 \section{Results}
 \label{resultssection}
 
-In order to empirically substantiate our conjecture, we take four examples of spatial-temporal series and attempt
+In order to empirically substantiate our proposal, we take four examples of spatial-temporal series and attempt
 to forecast using our feedforward neural network. 
 First, we calculate the optimal time delay/spatial delays ($L^*$ and $K^*$, respectively)
 using the first minima of the mutual information, then we calculate the optimal number of temporal/spatial points to use
@@ -773,7 +772,7 @@ We then use a Monte Carlo simulation on each one of our four examples, sampling 
 of the key feature selection parameters: $I$, $J$, $K$, $L$ (including the trivial ones with $I=0$ and/or $J=0$) 
 and calculate the values $d_e(I,J,K,L)$ 
 and $\textnormal{SSIM}(I,J,K,L)$.
-We plot the latter as a function of the former to compare against our conjecture as depicted in Fig.\ \ref{conjecture}.
+We plot the latter as a function of the former to compare against our proposal as depicted in Fig.\ \ref{conjecture}.
 
 We first take a physical system example, a real data example, and then we progress from ``simpler'' systems (coupled maps) 
 capable of generating 
@@ -784,7 +783,7 @@ from the original PDEs to truncated ODE expansions (e.g. spectral
 method expansions \cite{2001cfsm.book.....B}) to the most extreme simplification or discretization such as maps 
 which capture the essence of the problem(s). In all cases we take examples with one spatial and one temporal dimension. 
 However, we believe 
-that our conjecture will extend to multiple spatial dimensions. Notice that here we are not trying to demonstrate
+that our proposal will extend to multiple spatial dimensions. Again, notice that here we are not trying to demonstrate
 that neural networks, and in particular feedforward neural networks can perform well in predicting spatial-temporal chaos
 (as this has been demonstrated in the literature already), but 
 rather to show that the optimal choice of the input layer features is given by dynamical systems theory and does not need to be
@@ -898,7 +897,7 @@ $N_h=70$, $\eta=0.3$, $\alpha=0.01$, a logarithmic normalization of the inputs s
 The Monte Carlo results are depicted in Fig.\ \ref{MonteCarloSSIMversusParameterMetricDistance} showing runs with different $I$, $J$, $K$, $L$
 and plotting the SSIM versus the distance to the optimal input feature selection parameters ($I^*$,$J^*$,$K^*$,$L^*$) 
 given by the dynamical systems theory.  
-It shows a reasonable expected dispersion as conjectured and 
+It shows a reasonable expected dispersion as proposed and 
 a good convergence to the highest $\textnormal{SSIM}$ value we could obtain for this particular slicing of the training and forecast sets 
 $\textnormal{SSIM}= 0.836876152$. From the figure, there seems to be also two clusters of behaviour, and at closer inspection, we found that the
 cluster with lower SSIM is basically a set of very bad forecasts, with none of the characteristics of the real sunspot behaviour (the 11 year-like cycle
@@ -943,7 +942,7 @@ best possible forecast value given the limited dataset.}
 % code and results in
 % C:\Users\eurico\SunspotAnalysis\SpatialTemporalFeatureSelectionOptimalApproach\KuramotoSivashinsky27_HenonMaps.xlsm
 
-Motivated by having a real case from a physical system, we then tried to investigate if this same conjecture
+Motivated by having a real case from a physical system, we then tried to investigate if this same proposal
 holds in a very simplified example of a spatial-temporal model. Coupled maps are widely used as models of spatial-temporal
 chaos and pattern/structure formation \cite{1989PThPS..99..263K,1989JSP....54.1489M,9780471937418}.
 Following \cite{2000PhRvL..84.1890P,Parlitz2000NonlinearPO} we take a lattice of $M=100$
@@ -965,7 +964,7 @@ We used the ReLu function as the activation on both the hidden and output layers
 
 For this case the optimal values given by the mutual information and the false neighbours methods were $I^*=1$, $J^*=3$, $K^*=2$ and $L^*=3$. 
 The results of the Monte Carlo simulation for different $I$, $J$, $K$ and $L$
-are depicted in Fig.\ \ref{MonteCarloSSIMversusParameterMetricDistance}.  It again shows a dispersion as conjectured and a reasonable
+are depicted in Fig.\ \ref{MonteCarloSSIMversusParameterMetricDistance}.  It again shows a dispersion as proposed and a reasonable
 convergence to the highest
  $\textnormal{SSIM}$ value we could obtain for this particular slicing of the training and forecast sets $\textnormal{SSIM}=
 0.71139101$.
@@ -973,7 +972,7 @@ convergence to the highest
 
 
 
-Results seems to suggest the same structure as depicted in our conjecture diagram and in the previous results for sunspots. We now move
+Results seems to suggest the same structure as depicted in our proposal diagram and in the previous results for sunspots. We now move
 below to a more complex model, a coupled set of ODEs.
 
 \subsection{Coupled Ordinary Differential Equations - Lorenz-96 model}
@@ -1021,10 +1020,10 @@ We used the ReLU function as the activation on both the hidden and output layers
 
 For this case the optimal values obtained before the Monte Carlo simulation from the mutual information and false neighbours methods 
 were $I^*=2$, $J^*=2$, $K^*=1$ and $L^*=9$. The results of the random sampling of $I$, $J$, $K$, $L$ in the simulation
-are depicted in Fig.\ \ref{MonteCarloSSIMversusParameterMetricDistanceLorenz96}.  It shows a dispersion as conjectured and a quite a good
+are depicted in Fig.\ \ref{MonteCarloSSIMversusParameterMetricDistanceLorenz96}.  It shows a dispersion as proposed and a quite a good
 convergence to the highest 
 $\textnormal{SSIM}$ value we could obtain for this particular slicing of the training and forecast sets: $\textnormal{SSIM}=
-0.861844038$. Results seems to suggest the same structure as depicted in our conjecture diagram and in the previous results for sunspots
+0.861844038$. Results seems to suggest the same structure as depicted in our proposal diagram and in the previous results for sunspots
 and the coupled H\'{e}non maps.
 
 \subsection{Partial Differential Equations - Kuramoto-Sivashinsky model}
@@ -1077,9 +1076,9 @@ We used the ReLU function as the activation on both the hidden and output layers
 
 The results of the Monte Carlo simulation can be seen in Fig.\ \ref{MonteCarloSSIMversusParameterMetricDistanceKS_L=22}. For this 
 case the optimal values obtained before we run the Monte Carlo simulation were $I^*=1$, $J^*=2$, $K^*=2$ and $L^*=39$. It again shows a dispersion as 
-conjectured and a excellent convergence to the highest $\textnormal{SSIM}$ value we could obtain for this particular slicing of the training and 
+proposed and a excellent convergence to the highest $\textnormal{SSIM}$ value we could obtain for this particular slicing of the training and 
 test sets: a surprising high value of $\textnormal{SSIM}=0.990264382$. Results seems to suggest the same structure as depicted in our 
-conjecture diagram and in the previous results for sunspots, the coupled H\'{e}non maps and coupled ODEs. 
+proposal diagram and in the previous results for sunspots, the coupled H\'{e}non maps and coupled ODEs. 
 
 
 % Note that the IEEE typically puts floats only at the top, even when this
@@ -1162,13 +1161,13 @@ We have shown empirical evidence for the existence of an optimal feature selecti
 forecast spatial-temporal series. We believe that the selection of the features of the input layer can be uniquely determined by 
 the data itself, using two techniques from dynamical systems embedding theory: the mutual information and the false neighbours 
 methods. The former procedure determines the temporal and spatial delays to take when selecting features, while the latter  
-determines the number of data points in space and time to be taken as inputs.  We conjecture that this optimal feature selection gives the best 
-forecast, as measured by a standard image similarity index. We also conjecture that the shape of the dispersion of points on a Monte Carlo 
+determines the number of data points in space and time to be taken as inputs.  We propose that this optimal feature selection gives the best 
+forecast, as measured by a standard image similarity index. We also propose that the shape of the dispersion of points on a Monte Carlo 
 simulation across all possible feature selections on a plot of the similarity index versus the 
 distance to optimal feature selection is a skewed bell  
 shape with the highest value being the optimal feature selection/maximum similarity index.
   
-In order to substantiate our conjecture, we choose four unrelated systems, in order of complexity: a set of spatially 
+In order to substantiate our proposal, we choose four unrelated systems, in order of complexity: a set of spatially 
 extended coupled maps; a set of spatially extended coupled ODEs; a one-dimensional spatial PDE and a real spatial-temporal data set from 
 sunspots areas in our Sun. In all four cases, we were able to first use the mutual information and the false neighbours methods to 
 determine the four parameters defining the input layer feature selection\footnote{We have four parameters for the feature selection 
@@ -1176,7 +1175,8 @@ in these cases, with one temporal and one spatial dimension. For higher dimensio
 number being double the number of dimensions of the system.}. After calibration of the hyperparameters we then were able to forecast 
 reasonably the test set, although this is not the objective or primary goal of this article. 
 We then show that for a random Monte Carlo simulation across possible feature selections, the neural network did not, 
-as expected, forecast as well as it did for the specific set of optimal four parameters given by dynamical systems theory. As conjectured, the Monte Carlo 
+as expected, forecast as well as it did for the specific set of optimal four parameters given by dynamical systems theory. 
+As proposed, the Monte Carlo 
 simulations show that the shape of the distribution of points was a 
 skewed bell shape with the highest value being the optimal feature selection/maximum similarity index (subject to minor variations due to noise
 and the finiteness of the dataset).
@@ -1185,16 +1185,16 @@ Given how important spatial-temporal systems are
 and how we want to forecast the future as accurately as possible 
 it is quite 
 important to attempt to reduce the number of hyperparameters in neural network prediction, and to try to constraint the feature selection from 
-the data properties only. If indeed our conjecture turns out to be true, it would remove the input layer feature selection as another free 
+the data properties only. If indeed our proposal turns out to be true, it would remove the input layer feature selection as another free 
 parameter in the already complex process of choosing the details of the neural network to use for forecasting.
 
-In this article we have focused first and foremost in establishing empirical evidence for our conjecture, within a simple framework of 
+In this article we have focused first and foremost in establishing empirical evidence for our proposal, within a simple framework of 
 feedforward neural networks with one hidden layer for the purpose of prediction in one spatial and one temporal dimensions. Naturally, 
 there are many clear extensions to our research. First to use deeper networks with more hidden 
-layers to possible tackle systems which are hyperchaotic (i.e. with multiple positive Lyapunov exponents). Second, to attempt to extend the conjecture with empirical evidence in high 
-dimensions, e.g. 3+1-dimensional weather systems. Third, to extend the conjecture to more complex and fashionable
+layers to possible tackle systems which are hyperchaotic (i.e. with multiple positive Lyapunov exponents). Second, to attempt to extend the proposal with empirical evidence in high 
+dimensions, e.g. 3+1-dimensional weather systems. Third, to extend the proposal to more complex and fashionable
 neural networks models, such as recurrent neural networks, particularly echo state networks and long short-term memory networks.
- Fourth and last but not least, to prove the conjecture would show how dynamical systems theory can clarify the so call
+ Fourth and last but not least, to demonstrate the proposal rigorously would show how dynamical systems theory can clarify the so call
  ``dark arts'' in neural network feature construction. These objectives are however, outside the scope
  of this research article and will be pursued later.
 
