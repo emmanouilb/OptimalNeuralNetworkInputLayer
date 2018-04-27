@@ -770,7 +770,9 @@ First, we calculate the optimal time delay/spatial delays ($L^*$ and $K^*$, resp
 using the first minima of the mutual information, then we calculate the optimal number of temporal/spatial points to use
 ($J^*$ and $I^*$, respectively) using the method of false nearest neighbours.
 We then use a Monte Carlo simulation on each one of our four examples, sampling random values
-of the key feature selection parameters: $I$, $J$, $K$, $L$ and calculate the values $d_e(I,J,K,L)$ and $\textnormal{SSIM}(I,J,K,L)$.
+of the key feature selection parameters: $I$, $J$, $K$, $L$ (including the trivial ones with $I=0$ and/or $J=0$) 
+and calculate the values $d_e(I,J,K,L)$ 
+and $\textnormal{SSIM}(I,J,K,L)$.
 We plot the latter as a function of the former to compare against our conjecture as depicted in Fig.\ \ref{conjecture}.
 
 We first take a physical system example, a real data example, and then we progress from ``simpler'' systems (coupled maps) 
